@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>❤️</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+font-family:monospace;
+overflow:hidden;
+text-align:center;
+color:#c77dff;
+}
+
+/* MATRIX */
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-2;
+}
+
+/* BLUR */
+.blur-bg{
+position:fixed;
+width:100%;
+height:100%;
+backdrop-filter: blur(1px);
+z-index:-1;
+}
+
+/* TEXT */
+#text{
+font-size:40px;
+margin-top:100px;
+border-right:3px solid #c77dff;
+}
+
+/* HEART */
+#heart{
+font-size:70px;
+opacity:0;
+cursor:pointer;
+animation:pulse 1.5s infinite;
+}
+@keyframes pulse{
+50%{transform:scale(1.2);}
+}
+
+/* BOOK */
+.book{
+display:none;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:750px;
+height:420px;
+perspective:2000px;
+transform-style:preserve-3d;
+}
+
+/* PAGE */
+.page{
+position:absolute;
+width:100%;
+height:120%;
+background:black;
+transform-origin:left;
+transition:transform 1.5s ease, box-shadow 1s;
+box-shadow:0 0 30px #c77dff;
+overflow:hidden;
+backface-visibility:hidden;
+}
+
+/* IMAGE ZOOM */
+.page img{
+width:100%;
+height:137%;
+object-fit:cover;
+animation:zoom 10s ease-in-out infinite;
+}
+
+@keyframes zoom{
+0%{transform:scale(1);}
+50%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+/* FLIP */
+.page.flipped{
+transform:rotateY(-180deg) scale(1.05);
+box-shadow:0 0 80px #c77dff;
+}
+
+/* ORDER */
+.page:nth-child(1){z-index:5;}
+.page:nth-child(2){z-index:4;}
+.page:nth-child(3){z-index:3;}
+.page:nth-child(4){z-index:2;}
+.page:nth-child(5){z-index:1;}
+
+/* PARTICLES (TEXT FLOAT) */
+.particle{
+position:absolute;
+color:#ff66ff;
+font-weight:bold;
+text-shadow:0 0 10px #ff66ff;
+animation:float 6s linear infinite;
+white-space:nowrap;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);}
+100%{transform:translateY(-10vh);}
+}
+
+/* FINAL TEXT */
+#final{
+display:none;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:60px;
+color:#ff66ff;
+text-shadow:0 0 30px #ff66ff;
+}
+
+/* MOBILE */
+@media(max-width:668px){
+.book{width:90%;height:260px;}
+#text{font-size:26px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+<div class="blur-bg"></div>
+
+<h1 id="text"></h1>
+<div id="heart" onclick="startExperience()">❤️</div>
+
+<audio id="music" src="C:\Users\Dell\Desktop\BirthdayWebsite\New_West_-_Those_Eyes__slowed___reverb_(256k)-[AudioTrimmer.com].mp3"></audio>
+
+<div class="book" id="book">
+<div class="page"><img src="C:\Users\Dell\Desktop\BirthdayWebsite\IMG_20260409_231736_062.jpg "></div>
+<div class="page"><img src="C:\Users\Dell\Desktop\BirthdayWebsite\photo_2_2026-03-07_14-35-36.jpg"></div>
+<div class="page"><img src="C:\Users\Dell\Desktop\BirthdayWebsite\photo_1_2026-03-07_14-35-36.jpg"></div>
+<div class="page"><img src="C:\Users\Dell\Desktop\BirthdayWebsite\IMG_20260416_192050_505.jpg"></div>
+<div class="page"><img src="C:\Users\Dell\Desktop\BirthdayWebsite\IMG_20260416_192051_017.jpg"></div>
+</div>
+
+<div id="final">I LOVE YOU RIYEKO ❤️</div>
+
+<script>
+
+/* MATRIX */
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+const letters="Afekrshalww";
+const fontSize=18;
+const columns=canvas.width/fontSize;
+
+const drops=[];
+for(let i=0;i<columns;i++) drops[i]=1;
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#c77dff";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+let text=letters[Math.floor(Math.random()*letters.length)];
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
+}
+}
+setInterval(draw,33);
+
+/* TEXT INTRO */
+const msgs=["1",
+"2",
+"3",
+"HAPPY BIRTHDAY🎉🎉",
+"TO MY LOVE'RIYE'❤️",
+"Enkuan tweldshilgn",
+" Yne abeba💋💋💋",
+"Afekrshalew😘😘"];
+let mi=0,ci=0;
+
+function type(){
+if(ci<msgs[mi].length){
+document.getElementById("text").innerHTML+=msgs[mi][ci];
+ci++;
+setTimeout(type,70);
+}else{
+setTimeout(()=>{
+document.getElementById("text").innerHTML="";
+ci=0; mi++;
+if(mi<msgs.length) type();
+else document.getElementById("heart").style.opacity=1;
+},1200);
+}
+}
+type();
+
+/* MUSIC */
+const music=document.getElementById("music");
+
+function fadeIn(){
+music.volume=0;
+music.play();
+let v=0;
+let f=setInterval(()=>{
+if(v<0.4){
+v+=0.05;
+music.volume=v;
+}else clearInterval(f);
+},100);
+}
+
+/* START */
+function startExperience(){
+document.getElementById("book").style.display="block";
+fadeIn();
+autoFlip();
+}
+
+/* AUTO FLIP BEAT STYLE */
+function autoFlip(){
+
+let pages=document.querySelectorAll(".page");
+let current=0;
+
+setTimeout(()=>{ flipBeat(); },1200);
+
+function flipBeat(){
+
+if(current>=pages.length){
+finalEffect();
+return;
+}
+
+let page=pages[current];
+
+page.classList.add("flipped");
+
+/* glow pulse */
+page.style.boxShadow="0 0 100px #c77dff";
+setTimeout(()=>{
+page.style.boxShadow="0 0 40px #c77dff";
+},300);
+
+/* rhythm timing */
+let delay = (current % 2 === 0) ? 2800 : 1800;
+
+current++;
+setTimeout(flipBeat,delay);
+
+}
+
+}
+
+/* FINAL EFFECT TEXT FLOAT */
+function finalEffect(){
+
+document.getElementById("final").style.display="block";
+
+const messages=[
+"I LOVE YOU 💋💋💋",
+"YENE RIYE 💜",
+"LOVE YOU FOREVER ♾",
+"YOU ARE MY WORLD 🌍",
+"MY EVERYTHING 💫",
+];
+
+for(let i=0;i<35;i++){
+
+let p=document.createElement("div");
+p.className="particle";
+
+p.innerHTML=messages[Math.floor(Math.random()*messages.length)];
+p.style.left=Math.random()*100+"%";
+p.style.fontSize=(16+Math.random()*20)+"px";
+p.style.animationDelay=Math.random()*5+"s";
+
+document.body.appendChild(p);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
